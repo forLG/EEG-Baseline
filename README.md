@@ -8,8 +8,8 @@ This project is designed to work with the following EEG datasets.
 
 | Dataset | Train | Eval | Labels |
 |---------|-------|------|--------|
-| *HMC* | first 100 subjects | last 26 subjects | ? |
-| *TUSE* | train | eval | seizure (or not) |
+| *HMC* | first 100 subjects | last 26 subjects | sleep state (4 cls) |
+| *TUSZ* | train | eval | seizure (2 cls) |
 
 <!-- Dataset link -->
 
@@ -29,28 +29,9 @@ Set the parameters as in the [Paper](https://arxiv.org/pdf/1611.08024).
 
 ### CNN+Transformers
 
-A CNN+Transformer architecture is a common baseline that appears in many papers on EEG models, but a canonical implementation is not readily available. Therefore, we will implement, train, and evaluate a simple version here. The basic structure is outlined below.
+A CNN+Transformer architecture is a common baseline that appears in many papers on EEG models, see [Paper](https://arxiv.org/pdf/2208.02405) for detailed structure.
 
-```python
-class PositionEncoding(nn.Module):
-    ...
-
-class CNNTransformers(nn.Module):
-    def __init__(...):
-        # CNN feature extractor
-        self.cnn_extractor = nn.Sequential(
-            ...
-        )
-        # Add position information
-        self.pos_encoder = PositionEncoding(...)
-        # Transformer 
-        self.transformer_encoder = nn.TransformerEncoder(...)
-        # Classification head
-        self.classification_head = nn.Sequential(
-            ...
-        )
-    ...
-```
+![CNN Transformer Structure](./fig/cnn_transformer_structure.png)
 
 ### Qwen-VL
 
@@ -77,3 +58,39 @@ pred = model.generate(**inputs)
 # Support batch decode
 response = tokenizer.batch_decode(pred.cpu(), skip_special_tokens=True)
 ```
+
+> More modes to be added...
+
+## Installation and Usage
+
+### Installation
+
+```bash
+git clone https://github.com/forLG/EEG-Baseline
+
+conda create -n eeg-baseline
+conda activate eeg-baseline
+
+pip install -r requirements.txt
+```
+
+### Usage
+
+First, download required dataset *TUSZ* and *HMC*.
+
+<!-- Download link or guide -->
+
+Then, modify the training and evaluation scripts according to your loacl envirenment. Here, take EEGNet as an example. 
+
+- Change the setting in `./eegnet/train.py` and run the training loop. The best model will be saved in `MODEL_SAVE_PATH`.
+
+    ```bash
+    python ./eegnet/train.py
+    ```
+-  Change the setting in `./eegnet/eval.py` and run the evalution loop. The best model you trained last step will be loaded and the evalution result will be dumpped in a JSON file in `RESULTS_SAVE_PATH`.
+
+    ```bash
+    python ./eegnet/eval.py
+    ```
+
+

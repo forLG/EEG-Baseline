@@ -6,16 +6,33 @@ The goal of this project is to establish a set of reproducible baseline results 
 
 This project is designed to work with the following EEG datasets.
 
-| Dataset | Train | Eval | Labels |
-|---------|-------|------|--------|
-| *HMC* | first 100 subjects | last 26 subjects | sleep state (4 cls) |
-| *TUSZ* | train | eval | seizure (2 cls) |
+### *HMC*
+
+<!-- Dataset information -->
+
+In the JSON file, label 0, 1, 2, 3 stands for *Wake*, *NERM1*, *NERM2* and *NERM3* respectively.
+
+We use the EEGs of the first 100 subjects as train set, middle 25 subjects as dev set and last 26 subjects as eval set.
+
+| Split | Wake | NERM1 | NERM2 | NERM3 |
+|-|-|-|-|-|
+| Train | 47085 | 31632 | 100404 | 51000 |
+| Dev | 12558 | 6408 | 23316 | 14883 |
+| Eval | 11415 | 8604 | 26529 | 14130 |
+
+### *TUSZ*
+
+<!-- Dataset information -->
+
+In the JSON file, label 0 stands for no seizure shown, 1 for seizure.
+
+| Split | Not seizure | Seizure |
+|-|-|-|
+| Train | 295320 | 19301 |
+| Dev | 82441 | 5707 |
+| Eval | 42931 | 3160 |
 
 <!-- Dataset link -->
-
-Before starting, we may need to preprocess the dataset.
-
-<!-- Dataset preprocessing -->
 
 ## Models
 
@@ -31,7 +48,15 @@ Set the parameters as in the [Paper](https://arxiv.org/pdf/1611.08024).
 
 A CNN+Transformer architecture is a common baseline that appears in many papers on EEG models, see [Paper](https://arxiv.org/pdf/2208.02405) for detailed structure.
 
+Since the *Segment-level* model in the paper is too complex. We make a change to *Channel-level* model so that it can handle multi-channel data: Apply channel-level convolution for each channel, then concantate them together as the input of the transfomer encoder. 
+
+Below is the structure of the channel-level model.
+
 ![CNN Transformer Structure](./fig/cnn_transformer_structure.png)
+
+### LaBraM
+
+See [Github](https://github.com/935963004/LaBraM).
 
 ### Qwen-VL
 

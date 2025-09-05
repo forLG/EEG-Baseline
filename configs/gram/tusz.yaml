@@ -1,0 +1,57 @@
+# Global settings
+seed: 42
+device: cuda
+
+# Training hyperparameters
+training:
+  epochs: 20
+
+  optimizer:
+    name: AdamW
+    params: 
+      lr: 0.00005 # will be overwriten by lr_scheduler
+      weight_decay: 0.05
+
+  lr_scheduler:
+    name: CosineAnnealingLR
+    params:
+      T_max: 20
+      eta_min: 0.000005
+
+  criterion: CrossEntropyLoss # fixed
+
+  metrics: [acc, balanced_acc, f1]
+
+  checkpoint:
+    dir: ./checkpoints/Gram
+    save_strategy: best # best, last, epoch
+    monitor: balanced_acc # One of metric
+    save_freq: 1 # per epoch, used if save_strategy=epoch
+  
+  logging:
+    dir: ./logs
+    project_name: Gram-TUSZ
+    log_freq: 1 # per epoch
+    report_to: None # None, tensorboard, wandb
+  # ...
+
+# Evaluation settings
+evaluation:
+  output_dir: ./outputs
+
+# Model and dataset configuration
+model:
+  name: gram
+  class_name: GramWrapper
+  params:
+    num_classes: 2 # tusz
+    dataset_name: tusz
+    base_model_path: "./checkpoints/Gram/base.pth"
+    vqgan_model_path: './checkpoints/Gram/base_class_quantization.pth'
+    # pretrain_model_path: None # pass by command line when evaluation
+
+dataset:
+  name: tusz
+  path: "./data/TUSZ"
+  batch_size: 32
+  num_workers: 4

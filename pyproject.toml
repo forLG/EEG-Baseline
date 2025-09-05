@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# 项目名称，在 PyPI 上发布时使用。通常使用连字符。
+name = "eeg-baseline"
+# 项目版本号
+version = "0.1.0"
+# 项目作者
+authors = [
+  { name="Your Name", email="your.email@example.com" },
+]
+description = "A reproducible baseline framework for deep learning on EEG signals."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file="LICENSE" } # 建议添加一个 LICENSE 文件
+# 项目分类，有助于在 PyPI 上被搜索
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# 核心依赖项：项目运行时必须安装的包
+dependencies = [
+    "torch>=1.12",
+    "numpy>=1.21",
+    "scipy",
+    "scikit-learn",
+    "mne",
+    "yaml",
+    "addict",
+    "tqdm",
+    "einops"
+]
+
+# [project.urls] (可选)
+# Homepage = "https://github.com/your-username/eeg-baseline"
+# Repository = "https://github.com/your-username/eeg-baseline"
+
+# ===================================================================
+# project.optional-dependencies: 可选依赖项
+# ===================================================================
+[project.optional-dependencies]
+# 用于开发的依赖项，如测试、代码格式化和 linting
+dev = [
+    "pytest", # 测试框架
+    "black",  # 代码格式化工具
+    "ruff",   # 高性能的代码 Linter
+]
+
+# ===================================================================
+# project.scripts: 定义命令行入口点
+# ===================================================================
+[project.scripts]
+# 这会创建一个命令行工具。安装后，用户可以直接在终端运行 `eeg-runner`
+# 而不是 `python tools/run.py`。
+# "eeg-runner" 是命令名
+# "eeg_baseline.cli:main" 指向 `eeg_baseline` 包中的 `cli.py` 文件的 `main` 函数
+eeg-runner = "eeg_baseline.cli:main"
+
+
+# ===================================================================
+# tool.setuptools: setuptools 特定配置
+# ===================================================================
+[tool.setuptools.packages.find]
+# 自动发现项目中的所有包 (即包含 __init__.py 的目录)
+# 这样可以确保 `eeg_baseline` 整个源代码目录被正确打包
+where = ["."]
+include = ["eeg_baseline*"]
+exclude = ["tests*"]
